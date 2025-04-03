@@ -19,7 +19,9 @@ require_once ___MCD__PLUGIN_DIR_PATH . 'inc/post-types/cpt-haendler.php';
 require_once ___MCD__PLUGIN_DIR_PATH . 'inc/taxonomies/tax-fahrzeugart.php';
 require_once ___MCD__PLUGIN_DIR_PATH . 'inc/taxonomies/tax-fahrzeugklasse.php';
 require_once ___MCD__PLUGIN_DIR_PATH . 'inc/taxonomies/tax-motorisierung.php';
+
 require_once ___MCD__PLUGIN_DIR_PATH . 'inc/taxonomies/tax-haendlertyp.php';
+require_once ___MCD__PLUGIN_DIR_PATH . 'inc/taxonomies/tax-haendlertyp-map.php';
 
 // API Endpoints
 require_once ___MCD__PLUGIN_DIR_PATH . 'inc/api/dealers.php';

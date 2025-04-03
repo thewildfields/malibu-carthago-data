@@ -64,6 +64,19 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
             }
         }
 
+        // Marker Icons
+
+        if( $request['taxMarker'] ){
+            $terms = get_the_terms( $dealer->id, $request['taxMarker'] );
+            if( $terms ){
+                $termId = $terms[0]->term_id;
+                $markerField = get_field('map_marker', $request['taxMarker'].'_'.$termId);
+                if($markerField){
+                    $dealer->tax_marker = $markerField;
+                }
+            }
+        }
+
         $dealers[] = $dealer;
 
     endwhile; wp_reset_postdata(); endif;
@@ -74,7 +87,9 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
         return $a->distance <=> $b->distance;
     });
     $dealersResponse['resultsCount'] = sizeof($dealers);
-    $dealers = array_slice($dealers, 0, 5);
+    if( $request['limit'] ){
+        $dealers = array_slice($dealers, 0, $request['limit']);
+    }
 
     $dealersResponse['totalCount'] = sizeof($dealersQuery->posts);
     $dealersResponse['items'] = $dealers;

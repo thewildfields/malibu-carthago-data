@@ -2,6 +2,7 @@
 
 class Dealer {
 
+    public $id;
     public $title;
     public $city;
     public $country_code;
@@ -10,7 +11,11 @@ class Dealer {
     public $models;
     public $models_intersect;
     public $distance;
-    // public $dealer_categories;
+    public $phone;
+    public $email;
+    public $url;
+    public $categories;
+    public $tax_marker = null;
 
     function __construct($dealer){
 
@@ -26,7 +31,7 @@ class Dealer {
             array()
         ) : [];
 
-        $dealer_categories = is_array(get_the_terms( $dealer->ID, 'haendlertyp' )) ? array_reduce(
+        $categories = is_array(get_the_terms( $dealer->ID, 'haendlertyp' )) ? array_reduce(
             get_the_terms( $dealer->ID, 'haendlertyp' ),
             function ($result, $item) {
                 $result[$item->term_id] = ucfirst($item->name);
@@ -35,6 +40,9 @@ class Dealer {
             array()
         ) : [];
 
+        $dealer_meta = get_post_meta($dealer->ID);
+
+        $this->id = $dealer->ID;
         $this->title = $dealer->post_title;
         $this->city = array_key_exists('city', $address) ? $address['city'] : 'no city';
         $this->country_code = array_key_exists('country_short', $address)
@@ -50,7 +58,10 @@ class Dealer {
             ? $address['address']
             : 'no formatted address';
         $this->models = $dealer_models;
-        // $this->dealer_categories = $dealer_categories;
+        $this->phone = $dealer_meta['phone'][0];
+        $this->email = $dealer_meta['email'][0];
+        $this->url = $dealer_meta['url'][0];
+        $this->categories = $categories;
     }
 
 }

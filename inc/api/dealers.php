@@ -88,8 +88,6 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
             } else {
                 $dealer->distance = $calculatedDistance;
             }
-        } else {
-            continue;
         }
 
         // Marker Icons

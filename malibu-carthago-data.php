@@ -25,3 +25,10 @@ require_once ___MCD__PLUGIN_DIR_PATH . 'inc/taxonomies/tax-haendlertyp-map.php';
 
 // API Endpoints
 require_once ___MCD__PLUGIN_DIR_PATH . 'inc/api/dealers.php';
+
+function ___mcd__register_google_api_key( $api ){
+    $api['key'] = 'AIzaSyBkzLO8lK3yXznfawhOc74Y-FMvGR84tVg';
+    return $api;
+}
+
+add_filter('acf/fields/google_map/api', '___mcd__register_google_api_key');

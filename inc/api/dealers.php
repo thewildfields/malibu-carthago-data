@@ -36,6 +36,25 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
     
         $dealer = new Dealer($post);
 
+        // Name Filtering
+
+        if( $request->has_param('dealerName') && strlen($request['dealerName']) > 0){
+            if( !str_contains( strtolower($dealer->title) , strtolower($request['dealerName']))){
+                continue;
+            }
+        }
+
+        // Country filtering
+
+        if(
+            !$request['loadAll'] &&
+            (!$request->has_param('includeNeighbors') || !$request->has_param('includeNeighbors'))
+        ){
+            if($request['countryCode'] !== $dealer->country_code){
+                continue;
+            }
+        }
+
         // Models Filtering
         if( $request['model'] ){
             if( !is_array($dealer->models) || !sizeof($dealer->models) ){ continue; }
@@ -50,6 +69,13 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
         }
         unset($dealer->models);
 
+        // Dealer Category Filtering
+        if( $request->has_param('haendlertyp') && sizeof( explode('+', $request['haendlertyp'])) > 0 ){
+            if( !array_intersect(explode('+', $request['haendlertyp']), array_keys($dealer->categories) )){
+                continue;
+            }
+        }
+
         // Distance Filtering
 
         if( $request['lat'] && $request['lng'] ){
@@ -62,6 +88,8 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
             } else {
                 $dealer->distance = $calculatedDistance;
             }
+        } else {
+            continue;
         }
 
         // Marker Icons
@@ -74,6 +102,8 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
                 if($markerField){
                     $dealer->tax_marker = $markerField;
                 }
+            } else {
+                continue;
             }
         }
 

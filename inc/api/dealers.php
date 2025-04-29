@@ -60,7 +60,8 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
             if( !is_array($dealer->models) || !sizeof($dealer->models) ){ continue; }
             $requestModels = explode('+', $request['model']);
             $dealerModels = array_keys($dealer->models);
-            $modelsIntersect = array_intersect($requestModels, $dealerModels);
+            // $modelsIntersect = array_intersect($requestModels, $dealerModels);
+            $modelsIntersect = $dealerModels;
             if( $modelsIntersect ){
                 $dealer->models_intersect = implode(', ', array_values( array_intersect_key($dealer->models, array_flip($modelsIntersect))));
             } else {
@@ -68,6 +69,8 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
             }
         }
         unset($dealer->models);
+
+
 
         // Dealer Category Filtering
         if( $request->has_param('haendlertyp') && sizeof( explode('+', $request['haendlertyp'])) > 0 ){

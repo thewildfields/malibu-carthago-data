@@ -20,16 +20,26 @@ class Dealer {
     function __construct($dealer){
 
         $address = get_post_meta( $dealer->ID, 'haendler_adresse',true);
-        $dealerModelsForProcessing = get_post_meta( $dealer->ID, 'haendler_fahrzeuge', true);
-        
-        $dealer_models = is_array($dealerModelsForProcessing) ? array_reduce(
-            $dealerModelsForProcessing,
-            function ($result, $item) {
-                $result[$item] = get_the_title($item);
-                return $result;
-            },
-            array()
-        ) : [];
+        $dealerModelsForProcessing = [];
+
+        $modelsData = get_field('fahrzeugbestand', $dealer->ID);
+
+        if($modelsData){
+            foreach ($modelsData as $modelData) {
+                $modelObject = $modelData['modell'];
+                $modelID = $modelObject->ID;
+                $motorisierung = $modelData['motorisierung'];
+                if($motorisierung){
+                    $modelTitlePostFix = $modelData['modelljahr'].', '.$modelData['motorisierung'];
+                } else {
+                    $modelTitlePostFix = $modelData['modelljahr'];
+                }
+                $modelTitle = $modelObject->post_title.'('.$modelTitlePostFix.')';
+                $dealerModelsForProcessing[$modelID] = $modelTitle;
+            }
+        }
+
+        $dealer_models = $dealerModelsForProcessing;
 
         $categories = is_array(get_the_terms( $dealer->ID, 'haendlertyp' )) ? array_reduce(
             get_the_terms( $dealer->ID, 'haendlertyp' ),

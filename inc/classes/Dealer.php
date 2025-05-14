@@ -16,6 +16,7 @@ class Dealer {
     public $url;
     public $categories;
     public $tax_marker = null;
+    public $dealerModels = null;
 
     function __construct($dealer){
 
@@ -54,19 +55,21 @@ class Dealer {
 
         $this->id = $dealer->ID;
         $this->title = $dealer->post_title;
-        $this->city = array_key_exists('city', $address) ? $address['city'] : null;
-        $this->country_code = array_key_exists('country_short', $address)
-            ? strtolower($address['country_short'])
-            : null;
-        $this->location = array_key_exists('lat', $address) && array_key_exists('lng', $address)
-            ? [
-                'lat' => $address['lat'],
-                'lng' => $address['lng']
-            ]
-            : 'no location';
-        $this->formatted_address = array_key_exists('address', $address)
-            ? $address['address']
-            : 'no formatted address';
+        if( !empty($address) && is_array($address) ){
+            $this->city = array_key_exists('city', $address) ? $address['city'] : null;
+            $this->country_code = array_key_exists('country_short', $address)
+                ? strtolower($address['country_short'])
+                : null;
+            $this->location = array_key_exists('lat', $address) && array_key_exists('lng', $address)
+                ? [
+                    'lat' => $address['lat'],
+                    'lng' => $address['lng']
+                ]
+                : 'no location';
+            $this->formatted_address = array_key_exists('address', $address)
+                ? $address['address']
+                : 'no formatted address';
+        }
         $this->models = $dealer_models;
         $this->phone = $dealer_meta['phone'][0];
         $this->email = $dealer_meta['email'][0];

@@ -59,11 +59,19 @@ function ___mc__api_get_dealers( WP_REST_Request $request){
         if( $request['model'] ){
             if( !is_array($dealer->models) || !sizeof($dealer->models) ){ continue; }
             $requestModels = explode('+', $request['model']);
-            $dealerModels = array_keys($dealer->models);
-            // $modelsIntersect = array_intersect($requestModels, $dealerModels);
-            $modelsIntersect = $dealerModels;
+            $dealerModelKeys = array_keys($dealer->models);
+            $dealerModelValues = array_values($dealer->models);
+            $modelsIntersect = array_intersect($requestModels, $dealerModelKeys);
+            $outputListNew = array();
             if( $modelsIntersect ){
-                $dealer->models_intersect = implode(', ', array_values( array_intersect_key($dealer->models, array_flip($modelsIntersect))));
+                foreach ($dealerModelValues as $index => $title) {
+                    if( in_array($dealerModelKeys[$index], $requestModels) ){
+                        array_push($outputListNew, '<strong>'.$title.'</strong>');
+                    } else {
+                        array_push($outputListNew, $title);
+                    }
+                }
+                $dealer->models_intersect = implode(', ', $outputListNew);
             } else {
                 continue;
             }
